@@ -132,8 +132,7 @@ export default function App() {
   const renderList = () => {
     let filterData = filterSearchItem(data, search)
     return <FlatList
-      style={styles.list}
-      contentContainerStyle={{ paddingBottom: 300 }}
+      contentContainerStyle={{ paddingBottom: 250 }}
       data={filterData}
       renderItem={({ item }) =>
         (<Card
@@ -179,8 +178,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'contain'
-  },
-  list: {
-    padding: 10,
   }
 });
