@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { StyleSheet, SafeAreaView, View, FlatList, Keyboard, Image } from 'react-native'
+import {DB} from './src/db'
+import * as FileSystem from 'expo-file-system';
 
 import Navbar from './src/components/Navbar'
 import Search from './src/components/Search'
@@ -104,6 +106,19 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [viewData, setViewData] = useState(false)
 
+  useEffect(()=>{
+    initDB()
+  })
+
+  const initDB = async ()=>{
+    try{
+     await DB.init()
+     console.log('DB init OK!')
+    }catch(error){
+      console.log(error)
+    }
+    
+  }
 
   const toggleText = (text) => {
     if (text !== '') {
