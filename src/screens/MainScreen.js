@@ -1,107 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { StyleSheet, View, FlatList, Keyboard, Image } from 'react-native'
-
+import { CardContext } from '../context/card/cardContext'
 import Search from '../components/Search'
 import Card from '../components/Card'
 
-const saveData = [
-  {
-    id: '1',
-    name: 'Rozetka',
-    login: 'victor7777',
-    pass: 'victor7777',
-    url: 'https://rozetka.com.ua/ua/'
-  },
-  {
-    id: '2',
-    name: 'Udemy',
-    login: 'mephisto0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.com/'
-  },
-  {
-    id: '3',
-    name: 'Rozetka',
-    login: 'victor7777',
-    pass: 'victor7777',
-    url: 'https://rozetka.com.ua/ua/'
-  },
-  {
-    id: '4',
-    name: 'Udemy',
-    login: 'mephisto0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.com/'
-  },
-  {
-    id: '5',
-    name: 'Rozetka',
-    login: 'victor7777',
-    pass: 'victor7777',
-    url: 'https://rozetka.com.ua/ua/'
-  },
-  {
-    id: '6',
-    name: 'Udemy',
-    login: 'mephisto0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.com/'
-  },
-  {
-    id: '7',
-    name: 'Rozetka',
-    login: 'victor7777',
-    pass: 'victor7777',
-    url: 'https://rozetka.com.ua/ua/'
-  },
-  {
-    id: '8',
-    name: 'Udemy',
-    login: 'mephisto0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.com/'
-  },
-  {
-    id: '9',
-    name: 'Rozetka',
-    login: 'victor7777',
-    pass: 'victor7777',
-    url: 'https://rozetka.com.ua/ua/'
-  },
-  {
-    id: '10',
-    name: 'Udemy',
-    login: 'mephisto0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.com/'
-  },
-  {
-    id: '11',
-    name: 'Udemy',
-    login: 'mephisto0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.com/'
-  },
-  {
-    id: '12',
-    name: 'Udemy',
-    login: 'mephisto0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.com/'
-  },
-  {
-    id: '13',
-    name: '7777',
-    login: '=0000',
-    pass: 'mepfjri*655',
-    url: 'https://www.udemy.77777/'
-  }
-]
-export const MainScreen = props => {
-
-  const [data, setData] = useState(saveData)
+export const MainScreen = (props) => {
+  const cardContext = useContext(CardContext)
   const [search, setSearch] = useState('')
   const [viewData, setViewData] = useState(false)
+  
 
   const toggleText = (text) => {
     if (text !== '') {
@@ -128,9 +35,9 @@ export const MainScreen = props => {
   }
 
   const renderList = () => {
-    let filterData = filterSearchItem(data, search)
+    let filterData = filterSearchItem(cardContext.cards, search)
     return <FlatList
-      contentContainerStyle={{ paddingBottom: 300 }}
+      contentContainerStyle={{ paddingBottom: 320 }}
       data={filterData}
       renderItem={({ item }) =>
         (<Card

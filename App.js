@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, SafeAreaView, View } from 'react-native'
+import React, { useState } from 'react'
 import * as Font from 'expo-font'
 import { AppLoading } from 'expo'
 
-import { DB } from './src/db'
-import Navbar from './src/components/Navbar'
-import { MainScreen } from './src/screens/MainScreen'
-import { EditScreen } from './src/screens/EditScreen'
-
+import { MainLayout } from './src/MainLayout'
+import { CardState } from './src/context/card/CardState'
+import { ScreenState } from './src/context/screen/ScreenState'
 
 async function loadApplication() {
   await Font.loadAsync({
@@ -17,22 +14,8 @@ async function loadApplication() {
 }
 
 export default function App() {
-  const [screenId, setScreenId] = useState(1);
+
   const [isReady, setIsReady] = useState(false)
-
-
-  useEffect(() => {
-    initDB()
-  })
-
-  const initDB = async () => {
-    try {
-      await DB.init()
-      console.log('DB init OK!')
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   if (!isReady) {
     return (
@@ -44,24 +27,12 @@ export default function App() {
     )
   }
 
-  let content = <MainScreen />;
-
-  if (screenId !== 1) {
-    content = <EditScreen />;
-  }
-
   return (
-    <SafeAreaView>
-      <Navbar title={'DataSaver'} />
-      <View style={styles.container}>
-        {content}
-      </View>
-    </SafeAreaView >
+    <ScreenState>
+      <CardState>
+        <MainLayout />
+      </CardState>
+    </ScreenState>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 5,
-  }
-});

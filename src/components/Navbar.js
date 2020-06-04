@@ -8,12 +8,17 @@ import { THEME } from '../theme'
 import AppTextBold from './UI/AppTextBold'
 
 
-const Navbar = ({ title }) => {
+const Navbar = ({ title, editOpen, idScreen }) => {
+    const toggleIcon = () => {
+        return idScreen === 1 
+        ? <FontAwesome5 name="edit" size={24} color="white" onPress={() => editOpen(2)} style={styles.icon}/> 
+        : <AntDesign name="back" size={24} color="white" onPress={() => editOpen(1)} style={styles.icon}/>
+    }
+
     return (
         <View style={styles.navbar}>
-            <AntDesign name="back" size={24} color="white" />
             <AppTextBold style={styles.title}>{title}</AppTextBold>
-            <FontAwesome5 name="edit" size={24} color="white" />
+            {toggleIcon()}
         </View>
     );
 }
@@ -25,16 +30,24 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         flexDirection: 'row',
         alignItems: 'flex-end',
-        justifyContent: 'space-evenly'
+        justifyContent: 'center',
+        position: 'relative'
     },
     title: {
         color: '#fff',
         fontSize: 20,
     },
+    icon: {
+        position: 'absolute',
+        bottom: 10,
+        left: 40
+    }
 });
 
 Navbar.propTypes = {
     title: PropTypes.string.isRequired,
+    idScreen: PropTypes.number.isRequired,
+    editOpen: PropTypes.func.isRequired,
 };
 
 export default Navbar

@@ -1,0 +1,2 @@
+export const CREATE_DATA_SQ = 'CREATE_DATA_SQ'
+export const CHANGE_SCREEN = 'CHANGE_SCREEN'
