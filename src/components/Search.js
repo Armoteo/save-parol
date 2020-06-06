@@ -29,10 +29,11 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '80%',
-        padding: 10,
+        padding: 8,
         borderStyle: 'solid',
         borderBottomWidth: 2,
-        borderBottomColor: '#3949ab'
+        borderBottomColor: '#3949ab',
+        fontSize: 18
     },
     icon: {
         color: '#3949ab'

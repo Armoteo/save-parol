@@ -4,7 +4,7 @@ import { CardContext } from '../context/card/cardContext'
 import Search from '../components/Search'
 import Card from '../components/Card'
 
-export const MainScreen = (props) => {
+export const MainScreen = () => {
   const cardContext = useContext(CardContext)
   const [search, setSearch] = useState('')
   const [viewData, setViewData] = useState(false)
