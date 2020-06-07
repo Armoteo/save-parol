@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet, View, Keyboard } from 'react-native'
 import AppText from '../components/UI/AppText'
+import { THEME } from '../theme'
 
 import Input from '../components/UI/Input'
+import Button from '../components/UI/Button';
+import { ScreenContext } from '../context/screen/screenContext';
 
 export class EditScreen extends React.Component {
   constructor(props) {
@@ -12,6 +15,7 @@ export class EditScreen extends React.Component {
       values: ['', '', '', '']
     }
   }
+
 
   toggleText = (text, label) => {
     const { values, fields } = this.state
@@ -23,9 +27,16 @@ export class EditScreen extends React.Component {
     })
   }
 
+  addButton = (textButton) => {
+    const { screenId, changeScreen } = this.context
+    if (textButton === 'Cancel') {
+      changeScreen(1)
+    }
+    console.log('OK!')
+  }
+
   renderComponent = () => {
     const { values, fields } = this.state
-    console.log(values)
     return fields.map((item, index) =>
       <Input
         key={index}
@@ -41,11 +52,24 @@ export class EditScreen extends React.Component {
       <View style={styles.container}>
         <AppText style={styles.text}>Data saving</AppText>
         {this.renderComponent()}
+        <View style={styles.containerButton}>
+          <Button
+            onClick={this.addButton}
+            color={THEME.NAVBAR_COLOR}
+            colorText={THEME.WHITE_COLOR}
+          >Add</Button>
+          <Button
+            onClick={this.addButton}
+            color={THEME.DANGER_COLOR}
+            colorText={THEME.WHITE_COLOR}
+          >Cancel</Button>
+        </View>
       </View>
     )
   }
-
 }
+
+EditScreen.contextType = ScreenContext;
 
 const styles = StyleSheet.create({
   container: {
@@ -55,5 +79,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 22,
     alignSelf: 'center',
-  }
+  },
+  containerButton: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    marginTop: 10
+  },
 })
