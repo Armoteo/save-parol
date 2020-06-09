@@ -7,19 +7,10 @@ import { EditScreen } from './screens/EditScreen'
 import { DB } from './db'
 
 export const MainLayout = () => {
-  const {screenId, changeScreen} = useContext(ScreenContext)
+  const { screenId, changeScreen } = useContext(ScreenContext)
 
-  // const initDB = async () => {
-  //   try {
-  //     await DB.init()
-  //     console.log('DB init OK!')
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-  
   return (<SafeAreaView>
-    <Navbar title={'DataSaver'} editOpen={changeScreen} idScreen={screenId}/>
+    <Navbar title={'DataSaver'} editOpen={changeScreen} idScreen={screenId} />
     <View style={styles.container}>
       {screenId === 1 ? <MainScreen /> : <EditScreen />}
     </View>

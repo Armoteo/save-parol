@@ -1,14 +1,20 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, FlatList, Keyboard, Image } from 'react-native'
-import { CardContext } from '../context/card/cardContext'
+import { useDispatch, useSelector } from 'react-redux'
 import Search from '../components/Search'
 import Card from '../components/Card'
+import { loadCards } from '../store/actions/cardAction'
 
 export const MainScreen = () => {
-  const cardContext = useContext(CardContext)
   const [search, setSearch] = useState('')
   const [viewData, setViewData] = useState(false)
-  
+
+  const dispatch = useDispatch()
+  const cards = useSelector(state => state.card.allCards)
+
+  useEffect(() => {
+    dispatch(loadCards())
+  }, [dispatch])
 
   const toggleText = (text) => {
     if (text !== '') {
@@ -35,17 +41,23 @@ export const MainScreen = () => {
   }
 
   const renderList = () => {
-    let filterData = filterSearchItem(cardContext.cards, search)
-    return <FlatList
-      contentContainerStyle={{ paddingBottom: 320 }}
-      data={filterData}
-      renderItem={({ item }) =>
-        (<Card
-          itemData={item}
-        />)
-      }
-      keyExtractor={item => item.id}
-    />
+    let filterData = filterSearchItem(cards, search)
+    if (filterData.length > 0) {
+      return <FlatList
+        contentContainerStyle={{ paddingBottom: 320 }}
+        data={filterData}
+        renderItem={({ item }) =>
+          (<Card
+            itemData={item}
+          />)
+        }
+        keyExtractor={item => item.id}
+      />
+    } else {
+      alert('not found data')
+      setViewData(false)
+    }
+
   }
 
   const renderImage = () => {

@@ -1,17 +1,12 @@
 import React, { useState } from 'react'
-import * as Font from 'expo-font'
 import { AppLoading } from 'expo'
+import { Provider } from 'react-redux'
+import store from './src/store/index'
 
 import { MainLayout } from './src/MainLayout'
-import { CardState } from './src/context/card/CardState'
 import { ScreenState } from './src/context/screen/ScreenState'
+import { bootstrap } from './src/bootstrap'
 
-async function loadApplication() {
-  await Font.loadAsync({
-    'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),
-    'roboto-bold': require('./assets/fonts/Roboto-Bold.ttf')
-  })
-}
 
 export default function App() {
 
@@ -20,19 +15,21 @@ export default function App() {
   if (!isReady) {
     return (
       <AppLoading
-        startAsync={loadApplication}
+        startAsync={bootstrap}
         onError={err => console.log(err)}
         onFinish={() => setIsReady(true)}
       />
     )
   }
 
+
   return (
-    <ScreenState>
-      <CardState>
+    <Provider store={store}>
+      <ScreenState>
         <MainLayout />
-      </CardState>
-    </ScreenState>
+      </ScreenState>
+    </Provider>
+
   );
 }
 

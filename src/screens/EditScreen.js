@@ -31,8 +31,10 @@ export class EditScreen extends React.Component {
     const { screenId, changeScreen } = this.context
     if (textButton === 'Cancel') {
       changeScreen(1)
+    } else {
+      console.log('OK!')
     }
-    console.log('OK!')
+
   }
 
   renderComponent = () => {
