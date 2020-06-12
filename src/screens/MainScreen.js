@@ -5,7 +5,7 @@ import Search from '../components/Search'
 import Card from '../components/Card'
 import { loadCards } from '../store/actions/cardAction'
 
-export const MainScreen = () => {
+ const MainScreen = () => {
   const [search, setSearch] = useState('')
   const [viewData, setViewData] = useState(false)
 
@@ -41,22 +41,27 @@ export const MainScreen = () => {
   }
 
   const renderList = () => {
-    let filterData = filterSearchItem(cards, search)
-    if (filterData.length > 0) {
-      return <FlatList
-        contentContainerStyle={{ paddingBottom: 320 }}
-        data={filterData}
-        renderItem={({ item }) =>
-          (<Card
-            itemData={item}
-          />)
-        }
-        keyExtractor={item => item.id}
-      />
+    if (cards) {
+      let filterData = filterSearchItem(cards, search)
+      if (filterData.length > 0) {
+        return <FlatList
+          contentContainerStyle={{ paddingBottom: 320 }}
+          data={filterData}
+          renderItem={({ item }) =>
+            (<Card
+              itemData={item}
+            />)
+          }
+          keyExtractor={item => item.id.toString()}
+        />
+      } else {
+        alert('not found data')
+        setViewData(false)
+      }
     } else {
-      alert('not found data')
-      setViewData(false)
+      alert('Data not found')
     }
+    
 
   }
 
@@ -77,6 +82,8 @@ export const MainScreen = () => {
     </View>
   )
 }
+
+export default MainScreen
 
 const styles = StyleSheet.create({
   imagWrap: {

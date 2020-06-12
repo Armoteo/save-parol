@@ -2,12 +2,14 @@ import React, { useContext } from 'react'
 import { StyleSheet, View, Keyboard } from 'react-native'
 import AppText from '../components/UI/AppText'
 import { THEME } from '../theme'
+import { connect } from 'react-redux';
+import {addCard} from '../store/actions/cardAction'
 
 import Input from '../components/UI/Input'
 import Button from '../components/UI/Button';
 import { ScreenContext } from '../context/screen/screenContext';
 
-export class EditScreen extends React.Component {
+ class EditScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -15,7 +17,6 @@ export class EditScreen extends React.Component {
       values: ['', '', '', '']
     }
   }
-
 
   toggleText = (text, label) => {
     const { values, fields } = this.state
@@ -28,11 +29,15 @@ export class EditScreen extends React.Component {
   }
 
   addButton = (textButton) => {
-    const { screenId, changeScreen } = this.context
+    const { changeScreen } = this.context
+    const { values } = this.state
+    const { addCard} = this.props
     if (textButton === 'Cancel') {
       changeScreen(1)
     } else {
-      console.log('OK!')
+      addCard(values);
+      const newValues = ['', '', '', '']
+      this.setState({values: newValues})
     }
 
   }
@@ -72,6 +77,14 @@ export class EditScreen extends React.Component {
 }
 
 EditScreen.contextType = ScreenContext;
+
+const mapDispatchProps = dispatch => {
+  return {
+    addCard: (data) => dispatch(addCard(data))
+  }
+}
+
+export default connect(null, mapDispatchProps)(EditScreen)
 
 const styles = StyleSheet.create({
   container: {

@@ -9,7 +9,7 @@ export class DB {
     return new Promise((resolve, reject)=>{
      db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, login TEXT NOT NULL, pass TEXT NOT NULL, url TEXT NOT NULL)',
+        'CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, login TEXT NOT NULL, pass TEXT NOT NULL, url TEXT NOT NULL)',
         [],
         resolve,
         (_, error)=> reject(error)
