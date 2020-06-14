@@ -4,10 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import Search from '../components/Search'
 import Card from '../components/Card'
 import { loadCards } from '../store/actions/cardAction'
+import EditModal from '../components/EditModal'
 
- const MainScreen = () => {
+const MainScreen = () => {
   const [search, setSearch] = useState('')
   const [viewData, setViewData] = useState(false)
+  const [modal, setModal] = useState(false)
+  const [data, setData] = useState({})
+  const [values, setValues] = useState([])
 
   const dispatch = useDispatch()
   const cards = useSelector(state => state.card.allCards)
@@ -40,6 +44,11 @@ import { loadCards } from '../store/actions/cardAction'
     })
   }
 
+  const clickEditBtn = (data) => {
+    setData(data)
+    setModal(true)
+  }
+
   const renderList = () => {
     if (cards) {
       let filterData = filterSearchItem(cards, search)
@@ -50,6 +59,7 @@ import { loadCards } from '../store/actions/cardAction'
           renderItem={({ item }) =>
             (<Card
               itemData={item}
+              onClick={clickEditBtn}
             />)
           }
           keyExtractor={item => item.id.toString()}
@@ -61,13 +71,13 @@ import { loadCards } from '../store/actions/cardAction'
     } else {
       alert('Data not found')
     }
-    
-
   }
 
   const renderImage = () => {
     return <View style={styles.imagWrap}>
-      <Image source={require('../../assets/original.png')} style={styles.image} />
+      <Image source={require(
+        // @ts-ignore
+        '../../assets/original.png')} style={styles.image} />
     </View>
   }
 
@@ -77,6 +87,13 @@ import { loadCards } from '../store/actions/cardAction'
 
   return (
     <View>
+      <EditModal
+        modal={modal}
+        setModal={setModal}
+        data={data}
+        values={values}
+        setValues={setValues}
+      />
       <Search toggleText={toggleText} clickSearch={clickSearch} value={search} />
       {renderData()}
     </View>

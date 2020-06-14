@@ -6,7 +6,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import { THEME } from '../theme'
 
-const Card = ({ itemData }) => {
+const Card = ({ itemData, onClick }) => {
   return (
     <TouchableOpacity
       style={styles.cardWrap}
@@ -16,7 +16,13 @@ const Card = ({ itemData }) => {
       <AppTextBold style={styles.textCard}>Логин: {itemData.login}</AppTextBold>
       <AppTextBold style={styles.textCard}>Пароль: {itemData.pass}</AppTextBold>
       <AppTextBold style={styles.textCard}>Ссылка: {itemData.url}</AppTextBold>
-      <FontAwesome5 name="edit" size={24} style={styles.icon} />
+      {onClick
+        ? <FontAwesome5
+          name="edit"
+          size={24}
+          style={styles.icon}
+          onPress={() => onClick(itemData)}
+        /> : null}
     </TouchableOpacity>
   )
 }
@@ -51,13 +57,24 @@ const styles = StyleSheet.create({
   }
 });
 
+Card.defaultProps = {
+  onClick: undefined,
+  itemData: {
+    name: '',
+    login: '',
+    pass: '',
+    url: '',
+  },
+}
+
 Card.propTypes = {
   itemData: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    login: PropTypes.string.isRequired,
-    pass: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-  })
+    name: PropTypes.string,
+    login: PropTypes.string,
+    pass: PropTypes.string,
+    url: PropTypes.string,
+  }),
+  onClick: PropTypes.func
 
 };
 
