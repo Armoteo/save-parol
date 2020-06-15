@@ -53,7 +53,7 @@ export class DB {
       db.transaction(tx => {
         tx.executeSql(
           'UPDATE data SET name = ?, login = ?, pass = ?, url = ? WHERE id = ?',
-          [id, name, login, pass, url],
+          [name, login, pass, url, id],
           resolve,
           (_, error) => reject(error)
         )
