@@ -1,79 +1,136 @@
-import React, { useState, useEffect } from 'react'
+import React, { Component } from 'react'
 import { StyleSheet, View, FlatList, Keyboard, Image } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import { connect } from 'react-redux';
 import Search from '../components/Search'
 import Card from '../components/Card'
-import { loadCards } from '../store/actions/cardAction'
+import { loadCards, updateCard, deleteCard } from '../store/actions/cardAction'
 import EditModal from '../components/EditModal'
 
-const MainScreen = () => {
-  const [search, setSearch] = useState('')
-  const [viewData, setViewData] = useState(false)
-  const [modal, setModal] = useState(false)
-  const [data, setData] = useState({})
-  const [values, setValues] = useState([])
-
-  const dispatch = useDispatch()
-  const cards = useSelector(state => state.card.allCards)
-
-  useEffect(() => {
-    dispatch(loadCards())
-  }, [dispatch])
-
-  const toggleText = (text) => {
-    if (text !== '') {
-      setSearch(text)
-      setViewData(true)
-    } else {
-      setViewData(false)
-      Keyboard.dismiss()
-      setSearch('')
+class MainScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      search: '',
+      viewData: false,
+      modal: false,
+      data: {},
+      values: ['', '', '', ''],
+      fields: ['Name', 'Login', 'Pass', 'Url'],
+      dataCards: []
     }
   }
 
-  const clickSearch = () => {
-    Keyboard.dismiss()
-    setSearch('')
-    setViewData(!viewData)
-  }
-
-  const filterSearchItem = (array, searchName) => {
-    return array.filter(el => {
-      let name = el.name ? el.name.toLowerCase() : el.name
-      return name ? name.indexOf(searchName.toLowerCase()) !== -1 : null;
+  componentDidMount() {
+    const { cards } = this.props
+    this.props.loadCards()
+    this.setState({
+      dataCards: cards
     })
   }
 
-  const clickEditBtn = (data) => {
-    setData(data)
-    setModal(true)
+  componentDidUpdate(prevProps) {
+    const { cards } = this.props
+    const { dataCards } = this.state
+    if (dataCards !== prevProps.cards) {
+      this.props.loadCards()
+      this.setState({
+        dataCards: cards
+      })
+    }
   }
 
-  const renderList = () => {
-    if (cards) {
-      let filterData = filterSearchItem(cards, search)
-      if (filterData.length > 0) {
+  toggleText = (text) => {
+    if (text !== '') {
+      this.setState({
+        search: text,
+        viewData: true
+      })
+    } else {
+      this.setState({
+        search: '',
+        viewData: false
+      })
+      Keyboard.dismiss()
+    }
+  }
+
+  toggleValues = (text, label) => {
+    const { fields, values } = this.state
+    let newArrValues = values
+    if (text) {
+      const index = fields.indexOf(label, 0)
+      newArrValues[index] = text
+    } else {
+      newArrValues = ['', '', '', '']
+    }
+    this.setState({
+      values: newArrValues
+    })
+  }
+
+  clickSearch = () => {
+    Keyboard.dismiss()
+    this.setState({
+      search: '',
+      viewData: !this.state.viewData
+    })
+  }
+
+  filterSearchItem = (array, searchName) => {
+    let newArray = array.filter(el => {
+      let name = el.name ? el.name.toLowerCase() : el.name
+      return name ? name.indexOf(searchName.toLowerCase()) !== -1 : null;
+    })
+    return newArray
+  }
+
+  clickEditBtn = (data) => {
+    this.setState({
+      data: data,
+      modal: true
+    })
+  }
+
+  updateCard = data => {
+    this.props.updateCard(data)
+  }
+
+  onDelete = id => {
+    this.props.deleteCard(id)
+  }
+
+  setModal = modalStatus => {
+    this.setState({
+      modal: modalStatus
+    })
+  }
+
+  renderList = () => {
+    const { search, dataCards } = this.state
+    if (dataCards.length > 0) {
+      let filterData = this.filterSearchItem(dataCards, search)
+      if (filterData) {
         return <FlatList
           contentContainerStyle={{ paddingBottom: 320 }}
           data={filterData}
           renderItem={({ item }) =>
             (<Card
               itemData={item}
-              onClick={clickEditBtn}
+              onClick={this.clickEditBtn}
+              onDelete={this.onDelete}
             />)
           }
           keyExtractor={item => item.id.toString()}
         />
       } else {
-        alert('not found data')
-        setViewData(false)
+        this.setState({
+          viewData: false
+        })
       }
-    } else {
-      alert('Data not found')
     }
   }
 
-  const renderImage = () => {
+  renderImage = () => {
     return <View style={styles.imagWrap}>
       <Image source={require(
         // @ts-ignore
@@ -81,26 +138,45 @@ const MainScreen = () => {
     </View>
   }
 
-  const renderData = () => {
-    return viewData ? renderList() : renderImage()
+  renderData = () => {
+    const { viewData } = this.state
+    return viewData ? this.renderList() : this.renderImage()
   }
 
-  return (
-    <View>
-      <EditModal
-        modal={modal}
-        setModal={setModal}
-        data={data}
-        values={values}
-        setValues={setValues}
-      />
-      <Search toggleText={toggleText} clickSearch={clickSearch} value={search} />
-      {renderData()}
-    </View>
-  )
+  render() {
+    const { modal, data, values, search } = this.state
+    return (
+      <View>
+        <EditModal
+          modal={modal}
+          setModal={this.setModal}
+          data={data}
+          values={values}
+          setValues={this.toggleValues}
+          updateCard={this.updateCard}
+        />
+        <Search toggleText={this.toggleText} clickSearch={this.clickSearch} value={search} />
+        {this.renderData()}
+      </View>
+    )
+  }
 }
 
-export default MainScreen
+const mapStateToProps = state => {
+  return {
+    cards: state.card.allCards
+  }
+}
+
+const mapDispatchProps = dispatch => {
+  return {
+    loadCards: () => dispatch(loadCards()),
+    updateCard: (data) => dispatch(updateCard(data)),
+    deleteCard: (data) => dispatch(deleteCard(data)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchProps)(MainScreen)
 
 const styles = StyleSheet.create({
   imagWrap: {
@@ -116,3 +192,4 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
 })
+

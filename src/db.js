@@ -48,12 +48,12 @@ export class DB {
     })
   }
 
-  static updateData(data) {
+  static updateData({ id, name, login, pass, url }) {
     return new Promise((resolve, reject) => {
       db.transaction(tx => {
         tx.executeSql(
-          'UPDATE data SET name = ? WHERE id = ?',
-          [data],
+          'UPDATE data SET name = ?, login = ?, pass = ?, url = ? WHERE id = ?',
+          [id, name, login, pass, url],
           resolve,
           (_, error) => reject(error)
         )

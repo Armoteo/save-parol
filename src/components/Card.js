@@ -1,12 +1,12 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import AppTextBold from './UI/AppTextBold'
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 
 import { THEME } from '../theme'
 
-const Card = ({ itemData, onClick }) => {
+const Card = ({ itemData, onClick, onDelete }) => {
   return (
     <TouchableOpacity
       style={styles.cardWrap}
@@ -23,6 +23,11 @@ const Card = ({ itemData, onClick }) => {
           style={styles.icon}
           onPress={() => onClick(itemData)}
         /> : null}
+      <AntDesign
+        name="delete"
+        size={24}
+        style={styles.iconDelete}
+        onPress={() => onDelete(itemData.id)} />
     </TouchableOpacity>
   )
 }
@@ -54,6 +59,12 @@ const styles = StyleSheet.create({
     right: 10,
     top: 10,
     color: THEME.ICON_BLACK
+  },
+  iconDelete: {
+    position: 'absolute',
+    right: 15,
+    bottom: 10,
+    color: THEME.ICON_BLACK
   }
 });
 
@@ -74,7 +85,8 @@ Card.propTypes = {
     pass: PropTypes.string,
     url: PropTypes.string,
   }),
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onDelete: PropTypes.func
 
 };
 

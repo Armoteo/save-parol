@@ -29,10 +29,17 @@ export const addCard = card => async dispatch => {
 
 
 export const updateCard = (data) => async dispatch => {
-  await DB.updateData(data)
+  const updateCard = {
+    id: data[0],
+    name: data[1],
+    login: data[2],
+    pass: data[3],
+    url: data[4]
+  }
+  await DB.updateData(updateCard)
   dispatch({
     type: UPDATE_DATA_SQ,
-    payload: data.id
+    payload: updateCard
   })
 }
 

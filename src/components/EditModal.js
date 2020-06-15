@@ -1,42 +1,37 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { StyleSheet, View, Modal } from 'react-native'
 import PropTypes from 'prop-types'
 import Input from './UI/Input'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateCard } from '../store/actions/cardAction'
 import AppText from './UI/AppText'
 import Button from './UI/Button'
 import { THEME } from '../theme'
 import Card from './Card'
 
 
-const EditModal = ({ modal, setModal, data, values, setValues }) => {
+const EditModal = ({ modal, setModal, data, values, setValues, updateCard }) => {
   const fields = ['Name', 'Login', 'Pass', 'Url']
 
-  const dispatch = useDispatch()
-
-  const btnEdit = useCallback(() => {
+  const btnEdit = () => {
     const dataArr = Object.values(data).slice(1)
-    const newValuesSave = values.map((item, index) => {
+    let newValuesSave = values.map((item, index) => {
       if (item === '') {
-        dataArr[index]
+        return dataArr[index]
+      } else {
+        return values[index]
       }
-    }).unshift(data.id)
-    dispatch(updateCard(newValuesSave))
+    })
+    newValuesSave = [data.id, ...newValuesSave]
+    updateCard(newValuesSave)
+    setValues()
     setModal(false)
-  }, [dispatch])
+  }
+
 
   const btnCancel = () => {
     setModal(false)
   }
 
-  const toggleText = (text, label) => {
-    const index = fields.indexOf(label, 0)
-    let newArrValues = values
-    console.log(newArrValues)
-    newArrValues[index] = text
-    setValues(newArrValues)
-  }
+
 
   const renderComponent = () => {
     return fields.map((item, index) =>
@@ -45,7 +40,7 @@ const EditModal = ({ modal, setModal, data, values, setValues }) => {
         label={item}
         placeholder={`Enter ${item.toLowerCase()}`}
         value={values[index]}
-        toggleText={toggleText} />
+        toggleText={setValues} />
     )
   }
 
@@ -63,12 +58,12 @@ const EditModal = ({ modal, setModal, data, values, setValues }) => {
         {renderComponent()}
         <View style={styles.containerButton}>
           <Button
-            onClick={btnCancel}
+            onClick={btnEdit}
             color={THEME.NAVBAR_COLOR}
             colorText={THEME.WHITE_COLOR}
           >Edit</Button>
           <Button
-            onClick={btnEdit}
+            onClick={btnCancel}
             color={THEME.DANGER_COLOR}
             colorText={THEME.WHITE_COLOR}
           >Cancel</Button>
@@ -105,6 +100,7 @@ EditModal.propTypes = {
   data: PropTypes.object.isRequired,
   values: PropTypes.array.isRequired,
   setValues: PropTypes.func.isRequired,
+  updateCard: PropTypes.func.isRequired,
 };
 
 export default EditModal

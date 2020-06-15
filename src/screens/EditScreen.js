@@ -1,15 +1,15 @@
-import React, { useContext } from 'react'
-import { StyleSheet, View, Keyboard } from 'react-native'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
 import AppText from '../components/UI/AppText'
 import { THEME } from '../theme'
 import { connect } from 'react-redux';
-import {addCard} from '../store/actions/cardAction'
+import { addCard } from '../store/actions/cardAction'
 
 import Input from '../components/UI/Input'
 import Button from '../components/UI/Button';
 import { ScreenContext } from '../context/screen/screenContext';
 
- class EditScreen extends React.Component {
+class EditScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -31,13 +31,13 @@ import { ScreenContext } from '../context/screen/screenContext';
   addButton = (textButton) => {
     const { changeScreen } = this.context
     const { values } = this.state
-    const { addCard} = this.props
+    const { addCard } = this.props
     if (textButton === 'Cancel') {
       changeScreen(1)
     } else {
       addCard(values);
       const newValues = ['', '', '', '']
-      this.setState({values: newValues})
+      this.setState({ values: newValues })
     }
 
   }
