@@ -37,6 +37,7 @@ class MainScreen extends Component {
         dataCards: cards
       })
     }
+
   }
 
   toggleText = (text) => {
@@ -70,10 +71,13 @@ class MainScreen extends Component {
 
   clickSearch = () => {
     Keyboard.dismiss()
-    this.setState({
-      search: '',
-      viewData: !this.state.viewData
-    })
+    const { dataCards } = this.state
+    if (dataCards.length > 0) {
+      this.setState({
+        search: '',
+        viewData: !this.state.viewData
+      })
+    }
   }
 
   filterSearchItem = (array, searchName) => {
@@ -96,6 +100,9 @@ class MainScreen extends Component {
   }
 
   onDelete = id => {
+    this.setState({
+      modal: false
+    })
     this.props.deleteCard(id)
   }
 
@@ -109,24 +116,19 @@ class MainScreen extends Component {
     const { search, dataCards } = this.state
     if (dataCards.length > 0) {
       let filterData = this.filterSearchItem(dataCards, search)
-      if (filterData) {
-        return <FlatList
-          contentContainerStyle={{ paddingBottom: 320 }}
-          data={filterData}
-          renderItem={({ item }) =>
-            (<Card
-              itemData={item}
-              onClick={this.clickEditBtn}
-              onDelete={this.onDelete}
-            />)
-          }
-          keyExtractor={item => item.id.toString()}
-        />
-      } else {
-        this.setState({
-          viewData: false
-        })
-      }
+
+      return <FlatList
+        contentContainerStyle={{ paddingBottom: 220 }}
+        data={filterData}
+        renderItem={({ item }) =>
+          (<Card
+            itemData={item}
+            onClick={this.clickEditBtn}
+            onDelete={this.onDelete}
+          />)
+        }
+        keyExtractor={item => item.id.toString()}
+      />
     }
   }
 
@@ -146,7 +148,7 @@ class MainScreen extends Component {
   render() {
     const { modal, data, values, search } = this.state
     return (
-      <View>
+      <View style={styles.container}>
         <EditModal
           modal={modal}
           setModal={this.setModal}
@@ -154,6 +156,7 @@ class MainScreen extends Component {
           values={values}
           setValues={this.toggleValues}
           updateCard={this.updateCard}
+          onDelete={this.onDelete}
         />
         <Search toggleText={this.toggleText} clickSearch={this.clickSearch} value={search} />
         {this.renderData()}
@@ -179,12 +182,15 @@ const mapDispatchProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchProps)(MainScreen)
 
 const styles = StyleSheet.create({
+  container: {
+    height: '100%'
+  },
   imagWrap: {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
     height: 300,
-    top: '20%'
+    top: '15%'
   },
   image: {
     width: '100%',

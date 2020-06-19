@@ -89,6 +89,7 @@ export default connect(null, mapDispatchProps)(EditScreen)
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 5,
+    height: '100%'
 
   },
   text: {

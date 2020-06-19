@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet, SafeAreaView, View } from 'react-native'
 import { ScreenContext } from './context/screen/screenContext'
 import Navbar from './components/Navbar'
-import  MainScreen  from './screens/MainScreen'
-import  EditScreen  from './screens/EditScreen'
-import { DB } from './db'
+import MainScreen from './screens/MainScreen'
+import EditScreen from './screens/EditScreen'
+
 
 export const MainLayout = () => {
   const { screenId, changeScreen } = useContext(ScreenContext)
@@ -20,5 +20,6 @@ export const MainLayout = () => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 5,
+    backgroundColor: '#EFEFEF'
   }
 });

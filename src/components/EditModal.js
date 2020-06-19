@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { StyleSheet, View, Modal } from 'react-native'
 import PropTypes from 'prop-types'
 import Input from './UI/Input'
@@ -8,7 +8,7 @@ import { THEME } from '../theme'
 import Card from './Card'
 
 
-const EditModal = ({ modal, setModal, data, values, setValues, updateCard }) => {
+const EditModal = ({ modal, setModal, data, values, setValues, updateCard, onDelete }) => {
   const fields = ['Name', 'Login', 'Pass', 'Url']
 
   const btnEdit = () => {
@@ -26,12 +26,9 @@ const EditModal = ({ modal, setModal, data, values, setValues, updateCard }) => 
     setModal(false)
   }
 
-
   const btnCancel = () => {
     setModal(false)
   }
-
-
 
   const renderComponent = () => {
     return fields.map((item, index) =>
@@ -53,7 +50,7 @@ const EditModal = ({ modal, setModal, data, values, setValues, updateCard }) => 
       <View style={styles.container}>
         <AppText style={styles.text}>Edit card id#{data.id}</AppText>
         <View style={styles.cardContainer}>
-          <Card itemData={data} />
+          <Card itemData={data} onDelete={onDelete} />
         </View>
         {renderComponent()}
         <View style={styles.containerButton}>
@@ -76,7 +73,8 @@ const EditModal = ({ modal, setModal, data, values, setValues, updateCard }) => 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 5,
-
+    backgroundColor: '#D9D9D9',
+    height: '100%'
   },
   text: {
     fontSize: 22,
@@ -101,6 +99,7 @@ EditModal.propTypes = {
   values: PropTypes.array.isRequired,
   setValues: PropTypes.func.isRequired,
   updateCard: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default EditModal

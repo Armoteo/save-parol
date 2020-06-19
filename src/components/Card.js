@@ -36,18 +36,18 @@ const styles = StyleSheet.create({
   cardWrap: {
     position: 'relative',
     padding: 10,
-    marginTop: 5,
+    marginTop: 7,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowRadius: 2,
-    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    shadowOpacity: 0.2,
     shadowOffset: {
       width: 2,
       height: 2
     },
     borderRadius: 10,
     elevation: 8,
-    width: '90%',
+    width: '95%',
     alignSelf: 'center',
   },
   textCard: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
     bottom: 10,
-    color: THEME.ICON_BLACK
+    color: THEME.DANGER_COLOR
   }
 });
 
@@ -86,7 +86,7 @@ Card.propTypes = {
     url: PropTypes.string,
   }),
   onClick: PropTypes.func,
-  onDelete: PropTypes.func
+  onDelete: PropTypes.func.isRequired
 
 };
 
