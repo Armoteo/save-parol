@@ -10,7 +10,7 @@ const Card = ({ itemData, onClick, onDelete }) => {
   return (
     <TouchableOpacity
       style={styles.cardWrap}
-      activeOpacity={0.5}
+      activeOpacity={1}
     >
       <AppTextBold style={styles.textCard}>Сайт: {itemData.name}</AppTextBold>
       <AppTextBold style={styles.textCard}>Логин: {itemData.login}</AppTextBold>

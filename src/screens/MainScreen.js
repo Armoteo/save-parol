@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, FlatList, Keyboard, Image } from 'react-native'
+import { StyleSheet, View, FlatList, Keyboard, Image, Alert } from 'react-native'
 import { connect } from 'react-redux';
 import Search from '../components/Search'
 import Card from '../components/Card'
@@ -11,45 +11,25 @@ class MainScreen extends Component {
     super(props)
     this.state = {
       search: '',
-      viewData: false,
       modal: false,
       data: {},
       values: ['', '', '', ''],
       fields: ['Name', 'Login', 'Pass', 'Url'],
-      dataCards: []
     }
   }
 
   componentDidMount() {
-    const { cards } = this.props
     this.props.loadCards()
-    this.setState({
-      dataCards: cards
-    })
-  }
-
-  componentDidUpdate(prevProps) {
-    const { cards } = this.props
-    const { dataCards } = this.state
-    if (dataCards !== prevProps.cards) {
-      this.props.loadCards()
-      this.setState({
-        dataCards: cards
-      })
-    }
-
   }
 
   toggleText = (text) => {
     if (text !== '') {
       this.setState({
         search: text,
-        viewData: true
       })
     } else {
       this.setState({
         search: '',
-        viewData: false
       })
       Keyboard.dismiss()
     }
@@ -69,23 +49,21 @@ class MainScreen extends Component {
     })
   }
 
-  clickSearch = () => {
-    Keyboard.dismiss()
-    const { dataCards } = this.state
-    if (dataCards.length > 0) {
-      this.setState({
-        search: '',
-        viewData: !this.state.viewData
-      })
-    }
-  }
-
   filterSearchItem = (array, searchName) => {
     let newArray = array.filter(el => {
       let name = el.name ? el.name.toLowerCase() : el.name
       return name ? name.indexOf(searchName.toLowerCase()) !== -1 : null;
     })
-    return newArray
+    return newArray.sort(function (a, b) {
+      let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+      if (nameA < nameB) {
+        return -1
+      } else if (nameA > nameB) {
+        return 1
+      } else {
+        return 0
+      }
+    })
   }
 
   clickEditBtn = (data) => {
@@ -100,10 +78,27 @@ class MainScreen extends Component {
   }
 
   onDelete = id => {
-    this.setState({
-      modal: false
-    })
-    this.props.deleteCard(id)
+    Alert.alert(
+      'Удаление элемента',
+      'Вы уверены, что хотите удалить?',
+      [
+        {
+          text: 'Отмена',
+          style: 'cancel',
+        },
+        {
+          text: 'Удалить',
+          style: 'destructive',
+          onPress: async () => {
+            this.props.deleteCard(id)
+            this.setState({
+              modal: false
+            })
+          },
+        },
+      ],
+      { cancelable: false }
+    )
   }
 
   setModal = modalStatus => {
@@ -113,9 +108,10 @@ class MainScreen extends Component {
   }
 
   renderList = () => {
-    const { search, dataCards } = this.state
-    if (dataCards.length > 0) {
-      let filterData = this.filterSearchItem(dataCards, search)
+    const { search } = this.state
+    const { cards } = this.props
+    if (cards.length > 0) {
+      let filterData = this.filterSearchItem(cards, search)
 
       return <FlatList
         contentContainerStyle={{ paddingBottom: 220 }}
@@ -141,8 +137,8 @@ class MainScreen extends Component {
   }
 
   renderData = () => {
-    const { viewData } = this.state
-    return viewData ? this.renderList() : this.renderImage()
+    const { cards } = this.props
+    return cards.length > 0 ? this.renderList() : this.renderImage()
   }
 
   render() {
@@ -158,7 +154,7 @@ class MainScreen extends Component {
           updateCard={this.updateCard}
           onDelete={this.onDelete}
         />
-        <Search toggleText={this.toggleText} clickSearch={this.clickSearch} value={search} />
+        <Search toggleText={this.toggleText} value={search} />
         {this.renderData()}
       </View>
     )

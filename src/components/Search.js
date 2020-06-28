@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, Button } from 'react-native'
 import PropTypes from 'prop-types'
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const Search = ({ toggleText, clickSearch, value }) => {
+const Search = ({ toggleText, value }) => {
 
     return (
         <View style={styles.block}>
@@ -15,7 +15,7 @@ const Search = ({ toggleText, clickSearch, value }) => {
                 autoCapitalize='none'
                 placeholder='Введите название сайта...'
             />
-            <FontAwesome5 name="search" size={36} color="black" style={styles.icon} onPress={clickSearch} />
+            <FontAwesome5 name="search" size={36} color="black" style={styles.icon} />
         </View>
     );
 }
@@ -47,7 +47,6 @@ Search.defaultProps = {
 
 Search.propTypes = {
     toggleText: PropTypes.func.isRequired,
-    clickSearch: PropTypes.func.isRequired,
     value: PropTypes.string
 };
 export default Search
