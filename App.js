@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { AppLoading } from 'expo'
+import  AppLoading  from 'expo-app-loading'
 import { Provider } from 'react-redux'
 import store from './src/store/index'
 
